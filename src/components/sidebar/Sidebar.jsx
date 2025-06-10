@@ -1,26 +1,27 @@
+
 import { Square, Search, Users, BarChart, Sparkles, LogOut } from "lucide-react"
 import "./sidebar.css" 
 
-const navigationItems = [
-  {
-    category: "Recruitment",
-    links: [{ name: "Candidates", icon: Users, active: true }],
-  },
-  {
-    category: "Organization",
-    links: [
-      { name: "Employees", icon: Users },
-      { name: "Attendance", icon: BarChart },
-      { name: "Leaves", icon: Sparkles },
-    ],
-  },
-  {
-    category: "Others",
-    links: [{ name: "Logout", icon: LogOut }],
-  },
-]
+export default function Sidebar({ onLinkClick, activeLink }) {
+  const navigationItems = [
+    {
+      category: "Recruitment",
+      links: [{ name: "Candidates", icon: Users }],
+    },
+    {
+      category: "Organization",
+      links: [
+        { name: "Employees", icon: Users },
+        { name: "Attendance", icon: BarChart },
+        { name: "Leaves", icon: Sparkles },
+      ],
+    },
+    {
+      category: "Others",
+      links: [{ name: "Logout", icon: LogOut }],
+    },
+  ]
 
-export default function Sidebar() {
   return (
     <div className="sidebar-container">
       <div className="sidebar-header">
@@ -40,7 +41,14 @@ export default function Sidebar() {
             <ul className="sidebar-menu">
               {categoryGroup.links.map((item, itemIndex) => (
                 <li key={itemIndex} className="sidebar-menu-item">
-                  <a href="#" className={`sidebar-menu-link ${item.active ? "sidebar-menu-link-active" : ""}`}>
+                  <a
+                    href="#"
+                    className={`sidebar-menu-link ${activeLink === item.name ? "sidebar-menu-link-active" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onLinkClick(item.name)
+                    }}
+                  >
                     <item.icon className="sidebar-menu-icon" size={20} />
                     <span>{item.name}</span>
                   </a>

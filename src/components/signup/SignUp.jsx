@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Eye, EyeOff, Square } from "lucide-react";
-import axios from "axios";
 import "./signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { axiosHr } from "../../service/axios/axiosHr";
 
 const schema = yup.object().shape({
   fullName: yup.string().required("Full name is required"),
@@ -42,8 +42,8 @@ export default function SignUp() {
  const onSubmit = async (data) => {
   setLoading(true);
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/register",
+    const response = await axiosHr().post(
+      "/register",
       data
     );
     toast.success("Registration successful!");

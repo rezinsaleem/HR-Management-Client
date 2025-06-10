@@ -6,9 +6,9 @@ import { Eye, EyeOff, Square } from "lucide-react";
 import "./signin.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import axios from "axios";
+import { axiosHr } from "../../service/axios/axiosHr";
 import { toast } from "react-toastify";
-import { hrLogin } from "../../service/slices/hrSlice";
+import { hrLogin } from "../../service/redux/slices/hrSlice";
 
 const schema = yup.object().shape({
   email: yup
@@ -40,8 +40,8 @@ export default function SignIn() {
   console.log(data, 'loginData');
   setLoading(true);
   try {
-    const response = await axios.post(
-      "http://localhost:5000/api/login",
+    const response = await axiosHr().post(
+      "/login",
       data
     );
     const resData = response.data;

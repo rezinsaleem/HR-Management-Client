@@ -4,7 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { ToastContainer } from 'react-toastify'
 import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "./service/store.js";
+import { persistor, store } from "./service/redux/store.js";
 import { Provider } from "react-redux";
 import ErrorBoundary from "./utils/ErrorBoundary.jsx";
 
