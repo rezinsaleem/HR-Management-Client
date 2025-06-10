@@ -1,10 +1,10 @@
 
-import { useRef, useEffect } from "react" 
+import { useRef, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { X, Upload } from "lucide-react"
-import "./candidateform.css"
+import "./candidateform.css" 
 
 const addCandidateSchema = yup.object().shape({
   fullName: yup.string().required("Full name is required"),
@@ -25,7 +25,7 @@ const addCandidateSchema = yup.object().shape({
 })
 
 export default function AddCandidateForm({ onClose }) {
-  const modalContentRef = useRef(null) 
+  const modalContentRef = useRef(null)
 
   const {
     register,
@@ -33,17 +33,18 @@ export default function AddCandidateForm({ onClose }) {
     formState: { errors },
     watch,
     setValue,
+    trigger,
   } = useForm({
     resolver: yupResolver(addCandidateSchema),
   })
 
   const resumeFile = watch("resume")
+  const hasResumeContent = resumeFile && resumeFile[0] 
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
-        onClose() 
+        onClose()
       }
     }
 
@@ -52,29 +53,30 @@ export default function AddCandidateForm({ onClose }) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [onClose]) 
+  }, [onClose])
 
   const onSubmit = (data) => {
     console.log("Add Candidate Form Data:", data)
     alert("Candidate added successfully! Check console for data.")
-    onClose() 
+    onClose()
   }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]
     if (file && file.type === "application/pdf") {
       setValue("resume", [file])
+      trigger("resume")
     } else {
-      setValue("resume", null) 
-      alert("Please upload a PDF file for the resume.")
+      setValue("resume", null)
+      trigger("resume")
     }
   }
 
   return (
     <div className="add-candidate-modal-overlay">
       <div className="add-candidate-modal-content" ref={modalContentRef}>
-        {" "}
         <div className="add-candidate-modal-header">
+          <div></div>
           <h2 className="add-candidate-modal-title">Add New Candidate</h2>
           <button className="add-candidate-modal-close-button" onClick={onClose}>
             <X size={24} />
@@ -82,85 +84,92 @@ export default function AddCandidateForm({ onClose }) {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="add-candidate-form">
           <div className="add-candidate-form-grid">
-            <div className="add-candidate-form-group">
-              <label htmlFor="fullName" className="add-candidate-label">
-                Full Name*
-              </label>
+            <div className={`add-candidate-form-group ${errors.fullName ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="fullName"
                 type="text"
-                className={`add-candidate-input ${errors.fullName ? "add-candidate-input-error" : ""}`}
+                className="add-candidate-input"
                 {...register("fullName")}
+                placeholder=" " 
               />
+              <label htmlFor="fullName" className="add-candidate-label">
+                Full Name<span className="add-candidate-label-star">*</span>
+              </label>
               {errors.fullName && <p className="add-candidate-error-message">{errors.fullName.message}</p>}
             </div>
 
-            <div className="add-candidate-form-group">
-              <label htmlFor="emailAddress" className="add-candidate-label">
-                Email Address*
-              </label>
+            <div className={`add-candidate-form-group ${errors.emailAddress ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="emailAddress"
                 type="email"
-                className={`add-candidate-input ${errors.emailAddress ? "add-candidate-input-error" : ""}`}
+                className="add-candidate-input"
                 {...register("emailAddress")}
+                placeholder=" "
               />
+              <label htmlFor="emailAddress" className="add-candidate-label">
+                Email Address<span className="add-candidate-label-star">*</span>
+              </label>
               {errors.emailAddress && <p className="add-candidate-error-message">{errors.emailAddress.message}</p>}
             </div>
 
-            <div className="add-candidate-form-group">
-              <label htmlFor="phoneNumber" className="add-candidate-label">
-                Phone Number*
-              </label>
+            <div className={`add-candidate-form-group ${errors.phoneNumber ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="phoneNumber"
                 type="text"
-                className={`add-candidate-input ${errors.phoneNumber ? "add-candidate-input-error" : ""}`}
+                className="add-candidate-input"
                 {...register("phoneNumber")}
+                placeholder=" " 
               />
+              <label htmlFor="phoneNumber" className="add-candidate-label">
+                Phone Number<span className="add-candidate-label-star">*</span>
+              </label>
               {errors.phoneNumber && <p className="add-candidate-error-message">{errors.phoneNumber.message}</p>}
             </div>
 
-            <div className="add-candidate-form-group">
-              <label htmlFor="position" className="add-candidate-label">
-                Position*
-              </label>
+            <div className={`add-candidate-form-group ${errors.position ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="position"
                 type="text"
-                className={`add-candidate-input ${errors.position ? "add-candidate-input-error" : ""}`}
+                className="add-candidate-input"
                 {...register("position")}
+                placeholder=" "
               />
+              <label htmlFor="position" className="add-candidate-label">
+                Position<span className="add-candidate-label-star">*</span>
+              </label>
               {errors.position && <p className="add-candidate-error-message">{errors.position.message}</p>}
             </div>
 
-            <div className="add-candidate-form-group">
-              <label htmlFor="experience" className="add-candidate-label">
-                Experience*
-              </label>
+            <div className={`add-candidate-form-group ${errors.experience ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="experience"
                 type="text"
-                className={`add-candidate-input ${errors.experience ? "add-candidate-input-error" : ""}`}
+                className="add-candidate-input"
                 {...register("experience")}
+                placeholder=" " 
               />
+              <label htmlFor="experience" className="add-candidate-label">
+                Experience<span className="add-candidate-label-star">*</span>
+              </label>
               {errors.experience && <p className="add-candidate-error-message">{errors.experience.message}</p>}
             </div>
 
-            <div className="add-candidate-form-group">
+            <div
+              className={`add-candidate-form-group add-candidate-file-group ${errors.resume ? "add-candidate-input-error-group" : ""} ${hasResumeContent ? "has-content" : ""}`}
+            >
+              <input
+                id="resume"
+                type="file"
+                accept=".pdf"
+                className="add-candidate-file-input"
+                onChange={handleFileChange}
+              />
               <label htmlFor="resume" className="add-candidate-label">
-                Resume*
+                Resume<span className="add-candidate-label-star">*</span>
               </label>
-              <div className={`add-candidate-file-input-wrapper ${errors.resume ? "add-candidate-input-error" : ""}`}>
-                <input
-                  id="resume"
-                  type="file"
-                  accept=".pdf"
-                  className="add-candidate-file-input"
-                  onChange={handleFileChange}
-                />
+              <div className="add-candidate-file-display">
                 <span className="add-candidate-file-name">
-                  {resumeFile && resumeFile[0] ? resumeFile[0].name : "Upload PDF"}
+                  {resumeFile && resumeFile[0] ? resumeFile[0].name : ""}
                 </span>
                 <Upload size={20} className="add-candidate-upload-icon" />
               </div>
@@ -168,7 +177,7 @@ export default function AddCandidateForm({ onClose }) {
             </div>
           </div>
 
-          <div className="add-candidate-checkbox-group">
+            <div className="add-candidate-checkbox-group">
             <input
               id="declaration"
               type="checkbox"
