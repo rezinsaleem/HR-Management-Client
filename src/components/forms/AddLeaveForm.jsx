@@ -134,6 +134,8 @@ export default function AddLeaveForm({ onClose }) {
       })
       console.log("Leave added successfully:", response)
       toast.success(response.data.message)
+      window.location.reload();
+
       onClose()
     } catch (error) {
       console.error("Error adding leave:", error)

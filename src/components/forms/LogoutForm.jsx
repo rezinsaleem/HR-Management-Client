@@ -39,8 +39,8 @@ export default function LogoutForm({ onClose }) {
   };
 
   return (
-    <div className="add-candidate-modal-overlay">
-      <div className="add-candidate-modal-content" ref={modalContentRef}>
+    <div className="add-candidate-modal-overlay-logout">
+      <div className="add-candidate-modal-content-logout" ref={modalContentRef}>
         <div className="add-candidate-modal-header">
           <div></div>
           <h2 className="add-candidate-modal-title">Logout</h2>

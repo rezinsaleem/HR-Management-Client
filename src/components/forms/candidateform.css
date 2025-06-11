@@ -524,7 +524,7 @@
 }
 
 .add-candidate-save-button-grey{
-  background-color: #ef1111; 
+  background-color: #4d007d; 
   color: #fff;
   padding: 10px 20px;
   border: none;
@@ -537,4 +537,29 @@
   align-self: center; 
   width: fit-content; 
   min-width: 120px;
+}
+.add-candidate-modal-overlay-logout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; 
+}
+
+.add-candidate-modal-content-logout {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 900px; 
+  height: auto; 
+  max-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
