@@ -1,59 +1,60 @@
-
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
-import { X, Upload } from "lucide-react"
+import { X, ChevronDown } from "lucide-react"
 import "./candidateform.css" 
 
-const addCandidateSchema = yup.object().shape({
+const editEmployeeSchema = yup.object().shape({
   fullName: yup.string().required("Full name is required"),
   emailAddress: yup.string().email("Invalid email address").required("Email address is required"),
   phoneNumber: yup.string().required("Phone number is required"),
   position: yup.string().required("Position is required"),
   experience: yup.string().required("Experience is required"),
-  resume: yup
-    .mixed()
-    .required("Resume is required")
-    .test("fileType", "Only PDF files are allowed", (value) => {
-      if (value && value[0]) {
-        return value[0].type === "application/pdf"
-      }
-      return false
-    }),
-  declaration: yup.boolean().oneOf([true], "You must declare the information is true"),
+  dateofjoining: yup.string().required("Date of Joining is required"),
 })
 
-export default function AddCandidateForm({ onClose }) {
+export default function EditEmployeeForm({ onClose }) {
   const modalContentRef = useRef(null)
+ const [isPositionDropdownOpen, setIsPositionDropdownOpen] = useState(false); 
+ const [displayPositionValue, setDisplayPositionValue] = useState("Select Position"); 
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    watch,
     setValue,
-    trigger,
+    formState: { errors },
   } = useForm({
-    resolver: yupResolver(addCandidateSchema),
+    resolver: yupResolver(editEmployeeSchema),
+   
   })
 
-  const resumeFile = watch("resume")
-  const hasResumeContent = resumeFile && resumeFile[0] 
+  const positionDropdownRef = useRef(null); 
+
+  const handlePositionSelect = (option) => {
+    setDisplayPositionValue(option);
+    setValue("position", option, { shouldValidate: true });
+    setIsPositionDropdownOpen(false);
+  };
+
+
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
-        onClose()
-      }
-    }
+  const handleClickOutside = (event) => {
+    const clickedOutsideModal = modalContentRef.current && !modalContentRef.current.contains(event.target);
+    const clickedOutsideDropdown = positionDropdownRef.current && !positionDropdownRef.current.contains(event.target);
 
-    document.addEventListener("mousedown", handleClickOutside)
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
+    if (clickedOutsideModal && clickedOutsideDropdown) {
+      onClose();
     }
-  }, [onClose])
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [onClose]);
+
 
   const onSubmit = (data) => {
     console.log("Add Candidate Form Data:", data)
@@ -61,23 +62,12 @@ export default function AddCandidateForm({ onClose }) {
     onClose()
   }
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type === "application/pdf") {
-      setValue("resume", [file])
-      trigger("resume")
-    } else {
-      setValue("resume", null)
-      trigger("resume")
-    }
-  }
-
   return (
     <div className="add-candidate-modal-overlay">
       <div className="add-candidate-modal-content" ref={modalContentRef}>
         <div className="add-candidate-modal-header">
           <div></div>
-          <h2 className="add-candidate-modal-title">Add New Candidate</h2>
+          <h2 className="add-candidate-modal-title">Edit Employee Details</h2>
           <button className="add-candidate-modal-close-button" onClick={onClose}>
             <X size={24} />
           </button>
@@ -126,19 +116,46 @@ export default function AddCandidateForm({ onClose }) {
               {errors.phoneNumber && <p className="add-candidate-error-message">{errors.phoneNumber.message}</p>}
             </div>
 
-            <div className={`add-candidate-form-group ${errors.position ? "add-candidate-input-error-group" : ""}`}>
-              <input
+             <div className={`add-candidate-form-group ${errors.position ? "add-candidate-input-error-group" : ""}`}>
+              <div
                 id="position"
-                type="text"
-                className="add-candidate-input"
-                {...register("position")}
-                placeholder=" "
-              />
-              <label htmlFor="position" className="add-candidate-label">
-                Position<span className="add-candidate-label-star">*</span>
-              </label>
+                className="add-candidate-input add-candidate-custom-dropdown-input" 
+                tabIndex="0"
+                onClick={() => setIsPositionDropdownOpen(!isPositionDropdownOpen)}
+                onBlur={() => {
+                  register("position").onBlur();
+                }}
+                ref={(e) => {
+                  register("position").ref(e); 
+                  positionDropdownRef.current = e; 
+               }}
+             >
+               <span className={displayPositionValue === "Select Position" ? "add-candidate-placeholder-text" : ""}>
+                  {displayPositionValue}
+                </span>
+                <ChevronDown size={16} className="add-candidate-dropdown-arrow" />
+             </div>
+               <label htmlFor="position" className="add-candidate-label">
+                 Position<span className="add-candidate-label-star">*</span>
+               </label>
+             {isPositionDropdownOpen && (
+               <ul className="add-candidate-custom-dropdown-content">
+                  {[
+                    "Senior Developer",
+                    "Human Resource I...",
+                    "Full Time Designer",
+                    "Full Time Developer",
+                   "Other",
+                  ].map((option, index) => (
+                    <li key={index} className="add-candidate-custom-dropdown-item" onClick={() => handlePositionSelect(option)}>
+                      {option}
+                    </li>
+                 ))}
+               </ul>
+              )}
               {errors.position && <p className="add-candidate-error-message">{errors.position.message}</p>}
             </div>
+
 
             <div className={`add-candidate-form-group ${errors.experience ? "add-candidate-input-error-group" : ""}`}>
               <input
@@ -154,41 +171,24 @@ export default function AddCandidateForm({ onClose }) {
               {errors.experience && <p className="add-candidate-error-message">{errors.experience.message}</p>}
             </div>
 
-            <div
-              className={`add-candidate-form-group add-candidate-file-group ${errors.resume ? "add-candidate-input-error-group" : ""} ${hasResumeContent ? "has-content" : ""}`}
+           <div
+              className={`add-candidate-form-group ${errors.dateofjoining ? "add-candidate-input-error-group" : ""}`}
             >
               <input
-                id="resume"
-                type="file"
-                accept=".pdf"
-                className="add-candidate-file-input"
-                onChange={handleFileChange}
+                id="dateOfJoining"
+                type="date"
+                className="add-candidate-input"
+                {...register("dateOfJoining")}
+                placeholder=" "
               />
-              <label htmlFor="resume" className="add-candidate-label">
-                Resume<span className="add-candidate-label-star">*</span>
+              <label htmlFor="dateOfJoining" className="add-candidate-label">
+                Date of Joining<span className="add-candidate-label-star">*</span>
               </label>
-              <div className="add-candidate-file-display">
-                <span className="add-candidate-file-name">
-                  {resumeFile && resumeFile[0] ? resumeFile[0].name : ""}
-                </span>
-                <Upload size={20} className="add-candidate-upload-icon" />
-              </div>
-              {errors.resume && <p className="add-candidate-error-message">{errors.resume.message}</p>}
+              {errors.dateofjoining && <p className="add-candidate-error-message">{errors.dateofjoining.message}</p>}
+              {/* <Calendar size={20} className="add-candidate-calendar-icon" /> Calendar icon */}
             </div>
           </div>
 
-            <div className="add-candidate-checkbox-group">
-            <input
-              id="declaration"
-              type="checkbox"
-              className={`add-candidate-checkbox ${errors.declaration ? "add-candidate-input-error" : ""}`}
-              {...register("declaration")}
-            />
-            <label htmlFor="declaration" className="add-candidate-checkbox-label">
-              I hereby declare that the above information is true to the best of my knowledge and belief
-            </label>
-            {errors.declaration && <p className="add-candidate-error-message">{errors.declaration.message}</p>}
-          </div>
 
           <button type="submit" className="add-candidate-save-button">
             Save
@@ -198,3 +198,5 @@ export default function AddCandidateForm({ onClose }) {
     </div>
   )
 }
+
+

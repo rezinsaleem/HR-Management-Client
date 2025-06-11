@@ -1,10 +1,11 @@
 
-import { useState, useEffect } from "react" 
+import { useState, useEffect } from "react"
 
 import "./dashboard.css"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Header from "../../components/header/Header"
 import Table from "../../components/table/Table"
+import LeaveCalendar from "../../components/calendar/LeaveCalendar"
 
 export default function DashboardLayout() {
   const [activeSidebarLink, setActiveSidebarLink] = useState(() => {
@@ -12,7 +13,7 @@ export default function DashboardLayout() {
       const params = new URLSearchParams(window.location.search)
       return params.get("tab") || "Candidates"
     }
-    return "Candidates" 
+    return "Candidates"
   })
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function DashboardLayout() {
         window.removeEventListener("popstate", handlePopState)
       }
     }
-  }, [activeSidebarLink]) 
+  }, [activeSidebarLink])
 
   const tableData = {
     Candidates: {
@@ -64,7 +65,7 @@ export default function DashboardLayout() {
           position: "Senior Developer",
           status: "New",
           experience: "1+",
-          action: "",
+          action: ["Download Resume", "Delete Candidate"],
         },
         {
           srNo: "02",
@@ -74,7 +75,7 @@ export default function DashboardLayout() {
           position: "Human Resource I...",
           status: "New",
           experience: "1+",
-          action: "",
+          action: ["Download Resume", "Delete Candidate"],
         },
         {
           srNo: "03",
@@ -84,7 +85,7 @@ export default function DashboardLayout() {
           position: "Full Time Designer",
           status: "Selected",
           experience: "1+",
-          action: "",
+          action: ["Download Resume", "Delete Candidate"],
         },
         {
           srNo: "04",
@@ -94,74 +95,128 @@ export default function DashboardLayout() {
           position: "Full Time Developer",
           status: "Rejected",
           experience: "0",
-          action: "",
+          action: ["Download Resume", "Delete Candidate"],
         },
       ],
     },
     Employees: {
       columns: [
-        { key: "id", label: "ID" },
-        { key: "name", label: "Employee Name" },
-        { key: "department", label: "Department" },
-        { key: "hireDate", label: "Hire Date" },
-        { key: "status", label: "Status" },
+        { key: "profileImage", label: "Profile" },
+        { key: "employeeName", label: "Employee Name" },
+        { key: "emailAddress", label: "Email Address" },
+        { key: "phoneNumber", label: "Phone Number" },
+        { key: "position", label: "Position" },
+        { key: "dateOfJoining", label: "Date of Joining" },
         { key: "action", label: "Action" },
       ],
       data: [
         {
-          id: "E001",
-          name: "John Doe",
-          department: "Engineering",
-          hireDate: "2020-01-15",
-          status: "Active",
-          action: "",
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Robert Smith",
+          emailAddress: "robert.smith@example.com",
+          phoneNumber: "(301) 555-6789",
+          position: "Frontend Developer",
+          dateOfJoining: "2022-04-15",
+          action: ["Edit", "Delete"],
         },
-        { id: "E002", name: "Jane Smith", department: "HR", hireDate: "2019-03-20", status: "On Leave", action: "" },
         {
-          id: "E003",
-          name: "Peter Jones",
-          department: "Marketing",
-          hireDate: "2021-07-01",
-          status: "Active",
-          action: "",
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Sarah Johnson",
+          emailAddress: "sarah.johnson@example.com",
+          phoneNumber: "(406) 555-3412",
+          position: "UI/UX Designer",
+          dateOfJoining: "2021-11-02",
+          action: ["Edit", "Delete"],
+        },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Michael Chen",
+          emailAddress: "michael.chen@example.com",
+          phoneNumber: "(512) 555-9876",
+          position: "Backend Developer Intern",
+          dateOfJoining: "2023-01-10",
+          action: ["Edit", "Delete"],
+        },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Alicia Rodriguez",
+          emailAddress: "alicia.rodriguez@example.com",
+          phoneNumber: "(702) 555-4321",
+          position: "HR Manager",
+          dateOfJoining: "2021-08-22",
+          action: ["Edit", "Delete"],
         },
       ],
     },
     Attendance: {
       columns: [
-        { key: "date", label: "Date" },
-        { key: "employee", label: "Employee" },
+        { key: "profileImage", label: "Profile" },
+        { key: "employeeName", label: "Employee Name" },
+        { key: "position", label: "Position" },
+        { key: "department", label: "Department" },
+        { key: "task", label: "Task" },
         { key: "status", label: "Status" },
-        { key: "checkIn", label: "Check-in" },
-        { key: "checkOut", label: "Check-out" },
       ],
       data: [
-        { date: "2024-06-01", employee: "John Doe", status: "Present", checkIn: "09:00 AM", checkOut: "05:00 PM" },
-        { date: "2024-06-01", employee: "Jane Smith", status: "Absent", checkIn: "-", checkOut: "-" },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Robert Smith",
+          position: "Frontend Developer",
+          department: "Engineering",
+          task: "Homepage redesign",
+          status: "Present",
+        },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Sarah Johnson",
+          position: "UI/UX Designer",
+          department: "Design",
+          task: "User research",
+          status: "Absent",
+        },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Michael Chen",
+          position: "Backend Developer",
+          department: "Engineering",
+          task: "API development",
+          status: "Present",
+        },
+        {
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Alicia Rodriguez",
+          position: "HR Manager",
+          department: "Human Resources",
+          task: "Recruitment process",
+          status: "Present",
+        },
       ],
     },
     Leaves: {
       columns: [
-        { key: "employee", label: "Employee" },
-        { key: "type", label: "Leave Type" },
-        { key: "startDate", label: "Start Date" },
-        { key: "endDate", label: "End Date" },
+        { key: "profileImage", label: "Profile" },
+        { key: "employeeName", label: "Employee Name" },
+        { key: "date", label: "Date" },
+        { key: "reason", label: "Reason" },
         { key: "status", label: "Status" },
+        { key: "doc", label: "Doc" },
       ],
       data: [
         {
-          employee: "Jane Smith",
-          type: "Sick Leave",
-          startDate: "2024-06-05",
-          endDate: "2024-06-07",
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Michael Chen",
+          date: "2025-01-10",
+          reason: "Medical leave",
           status: "Approved",
+          doc :''
         },
         {
-          employee: "Peter Jones",
-          type: "Casual Leave",
-          startDate: "2024-06-10",
-          endDate: "2024-06-10",
+          profileImage: "/assets/userdefault.jpg?height=40&width=40",
+          employeeName: "Alicia Rodriguez",
+          date: "2025-01-20",
+          reason: "Sick leave",
           status: "Pending",
+          doc :''
         },
       ],
     },
@@ -171,10 +226,58 @@ export default function DashboardLayout() {
     },
   }
 
+  const dropdownOptions = {
+    Candidates: {
+      header: {
+        status: ["All", "New", "Scheduled", "Ongoing", "Selected", "Rejected"],
+        position: ["All", "Developer", "Designer", "Hiring Manager"],
+      },
+      table: {
+        status: ["New", "Scheduled", "Ongoing", "Selected", "Rejected"],
+      },
+    },
+    Employees: {
+      header: {
+        status: [],
+        position: ["All", "Full time","Intern", "Junior", "Senior", "Team Lead"],
+      },
+      table: {
+        status: [],
+      },
+    },
+    Attendance: {
+      header: {
+        status: ["All", "Present", "Absent", "Medical Leave", "Work From Home"],
+        position: [],
+      },
+      table: {
+        status: ["Present", "Absent"],
+      },
+    },
+    Leaves: {
+      header: {
+        status: ["All", "Approved", "Pending", "Rejected"],
+        position: [],
+      },
+      table: {
+        status: ["Approved", "Rejected"],
+      },
+    },
+    Logout: {
+      header: {
+        status: [],
+        position: [],
+      },
+      table: {
+        status: [],
+      },
+    },
+  }
+
   const currentTable = tableData[activeSidebarLink] || { columns: [], data: [] }
 
   const handleLinkClick = (linkName) => {
-    console.log("Setting active link to:", linkName) 
+    console.log("Setting active link to:", linkName)
     setActiveSidebarLink(linkName)
   }
 
@@ -182,10 +285,21 @@ export default function DashboardLayout() {
     <div className="dashboard-layout-container">
       <Sidebar onLinkClick={handleLinkClick} activeLink={activeSidebarLink} />
       <main className="dashboard-main-content">
-        <Header />
+        <Header
+          currentTab={activeSidebarLink}
+          statusOptions={dropdownOptions[activeSidebarLink]?.header?.status || []}
+          positionOptions={dropdownOptions[activeSidebarLink]?.header?.position || []}
+        />
         <div className="dashboard-content-wrapper">
-          <Table columns={currentTable.columns} data={currentTable.data} />
-
+          <Table
+            columns={currentTable.columns}
+            data={currentTable.data}
+            statusOptions={dropdownOptions[activeSidebarLink]?.table?.status || []}
+            className={activeSidebarLink === "Leaves" ? "leaves" : "table"}
+          />
+          {activeSidebarLink === "Leaves" && (
+            <LeaveCalendar/>
+          )}
         </div>
       </main>
     </div>

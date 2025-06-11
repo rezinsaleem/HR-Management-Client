@@ -1,0 +1,251 @@
+
+.lc-container {
+  width: 37%;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.lc-header {
+  background: #4d007d;
+  color: white;
+  padding: 20px 30px;
+}
+
+.lc-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.lc-calendar {
+  padding: 20px;
+}
+
+.lc-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lc-nav-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.lc-nav-button:hover {
+  background-color: #f3f4f6;
+}
+
+.lc-month-year {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.lc-calendar-grid {
+  width: 100%;
+}
+
+.lc-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.lc-weekday {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  padding: 8px 4px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.lc-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  border-left: 1px solid #e5e7eb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.lc-calendar-day {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  border-radius: 0;
+  transition: all 0.2s;
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  min-height: 40px;
+}
+
+.lc-calendar-day:hover:not(.lc-calendar-day-empty) {
+  background-color: #f3f4f6;
+}
+
+.lc-calendar-day-empty {
+  cursor: default;
+  background-color: #f9fafb;
+}
+
+.lc-calendar-day-selected {
+  background-color: #ede9fe;
+  color: #7c3aed;
+  border: 1px solid #4d007d;
+  border-radius: 10%;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.lc-calendar-day-has-leaves {
+  font-weight: 500;
+}
+
+.lc-calendar-day-number {
+  position: relative;
+  z-index: 1;
+}
+
+.lc-calendar-day-indicator {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  background-color: #4d007d;
+  border-radius: 50%;
+  width: 10px;
+  height: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  padding: 0 2px;
+}
+
+.lc-calendar-day-selected .lc-calendar-day-indicator {
+  background-color: #4d007d;
+}
+
+.lc-leave-count {
+  line-height: 1;
+}
+
+.lc-approved-leaves {
+  border-top: 1px solid #e5e7eb;
+  padding: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.lc-approved-leaves-title {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.lc-approved-leaves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lc-approved-leave-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.lc-approved-leave-item:hover {
+  background-color: #f9fafb;
+}
+
+.lc-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lc-leave-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lc-leave-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lc-leave-role {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lc-leave-type {
+  font-size: 12px;
+  color: #4d007d;
+  font-weight: 500;
+  background-color: #ede9fe;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.lc-no-leaves {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  padding: 20px;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  .lc-container {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .lc-calendar-day {
+    min-height: 35px;
+    font-size: 13px;
+  }
+
+  .lc-calendar-day-indicator {
+    min-width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+}
