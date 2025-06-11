@@ -18,7 +18,7 @@ const isTokenExpired = (token) => {
 
 export const axiosHr = () => {
   const axiosInstance = axios.create({
-    baseURL: `http://localhost:5000/api`,
+    baseURL: `https://hr-management-server-5cqc.onrender.com/api`,
     headers: {
       'Content-Type': 'application/json',
     },

@@ -148,7 +148,7 @@ export default function Table({
     } else if (action === "Download Resume") {
       if (rowData.resume) {
         window.open(
-          `http://localhost:5000/uploads/${rowData.resume}`,
+          `https://hr-management-server-5cqc.onrender.com/uploads/${rowData.resume}`,
           "_blank"
         );
       } else {
@@ -206,7 +206,7 @@ export default function Table({
                       onClick={() => {
                         if (row.doc) {
                           window.open(
-                            `http://localhost:5000/uploads/${row.doc}`,
+                            `https://hr-management-server-5cqc.onrender.com/uploads/${row.doc}`,
                             "_blank"
                           );
                         } else {
