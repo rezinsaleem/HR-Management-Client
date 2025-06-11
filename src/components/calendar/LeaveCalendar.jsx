@@ -1,72 +1,56 @@
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { useSelector } from "react-redux"
 import "./calendar.css"
 
+export const formatLeaveData = (leaveRecords = []) => {
+  return leaveRecords.map((leave) => ({
+    profileImage: "/assets/userdefault.jpg?height=40&width=40",
+    employeeName: leave.employeeName || "-",
+    date: leave.date || "-", 
+    reason: leave.reason || "-",
+    status: leave.status || "-",
+    doc: leave.document || "", 
+    email: leave.emailAddress,
+  }))
+}
 
-const LeaveCalendar= () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2024, 8, 1)) 
-  const [selectedDate, setSelectedDate] = useState(8) 
+const LeaveCalendar = () => {
+  const [currentDate, setCurrentDate] = useState(new Date(2024, 8, 1))
+  const [selectedDate, setSelectedDate] = useState(8)
 
-  
-  const leavesData= {
-    "8": [
-      {
-        id: "1",
-        name: "Cody Fisher",
-        role: "Senior Backend Developer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Annual Leave",
-      },
-      {
-        id: "2",
-        name: "Jenny Wilson",
-        role: "UI/UX Designer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Sick Leave",
-      },
-    ],
-    "9": [
-      {
-        id: "3",
-        name: "Robert Fox",
-        role: "Frontend Developer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Personal Leave",
-      },
-    ],
-    "15": [
-      {
-        id: "4",
-        name: "Kristin Watson",
-        role: "Product Manager",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Annual Leave",
-      },
-      {
-        id: "5",
-        name: "Devon Lane",
-        role: "QA Engineer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Annual Leave",
-      },
-      {
-        id: "6",
-        name: "Marvin McKinney",
-        role: "DevOps Engineer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Sick Leave",
-      },
-    ],
-    "22": [
-      {
-        id: "7",
-        name: "Theresa Webb",
-        role: "Marketing Specialist",
-        avatar: "/placeholder.svg?height=40&width=40",
-        leaveType: "Annual Leave",
-      },
-    ],
-  }
+  const leaveData = useSelector((state) => state.leave.leaveData)
+
+  const organizedLeaveData = useMemo(() => {
+    const formattedLeaves = formatLeaveData(leaveData)
+    const organized = {}
+    console.log(formattedLeaves,"][][][")
+    formattedLeaves.forEach((leave) => {
+      if (leave.date && leave.date !== "-") {
+        
+        const leaveDate = new Date(leave.date)
+        const day = leaveDate.getDate()
+        const month = leaveDate.getMonth()
+        const year = leaveDate.getFullYear()
+
+        if (month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+          if (!organized[day]) {
+            organized[day] = []
+          }
+          organized[day].push({
+            id: leave.email || Math.random().toString(), 
+            name: leave.employeeName,
+            role: "Employee", 
+            avatar: leave.profileImage,
+            leaveType: leave.reason,
+            status: leave.status,
+          })
+        }
+      }
+    })
+
+    return organized
+  }, [leaveData, currentDate])
 
   const monthNames = [
     "January",
@@ -103,7 +87,7 @@ const LeaveCalendar= () => {
       }
       return newDate
     })
-    setSelectedDate(1) 
+    setSelectedDate(1)
   }
 
   const handleDateClick = (day) => {
@@ -111,7 +95,7 @@ const LeaveCalendar= () => {
   }
 
   const getSelectedDateLeaves = () => {
-    return leavesData[selectedDate.toString()] || []
+    return organizedLeaveData[selectedDate.toString()] || []
   }
 
   const renderCalendarDays = () => {
@@ -124,7 +108,7 @@ const LeaveCalendar= () => {
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const dayLeaves = leavesData[day.toString()] || []
+      const dayLeaves = organizedLeaveData[day.toString()] || []
       const leaveCount = dayLeaves.length
       const isSelected = day === selectedDate
       const hasLeaves = leaveCount > 0

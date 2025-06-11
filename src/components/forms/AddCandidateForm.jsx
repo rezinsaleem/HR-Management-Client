@@ -5,6 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { X, Upload } from "lucide-react"
 import "./candidateform.css" 
+import { axiosHr } from "../../service/axios/axiosHr"
+import { toast } from "react-toastify"
+import { useDispatch } from "react-redux"
+import { setCandidates } from "../../service/redux/slices/candidateSlice"
+import { formatCandidates } from "../../utils/formatCandidates"
 
 const addCandidateSchema = yup.object().shape({
   fullName: yup.string().required("Full name is required"),
@@ -26,6 +31,7 @@ const addCandidateSchema = yup.object().shape({
 
 export default function AddCandidateForm({ onClose }) {
   const modalContentRef = useRef(null)
+  const dispatch = useDispatch()
 
   const {
     register,
@@ -55,10 +61,39 @@ export default function AddCandidateForm({ onClose }) {
     }
   }, [onClose])
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("Add Candidate Form Data:", data)
-    alert("Candidate added successfully! Check console for data.")
-    onClose()
+    const formData = new FormData();
+
+  formData.append("fullName", data.fullName);
+  formData.append("emailAddress", data.emailAddress);
+  formData.append("phoneNumber", data.phoneNumber);
+  formData.append("position", data.position);
+  formData.append("experience", data.experience);
+  formData.append("declaration", data.declaration);
+  formData.append("resume", data.resume[0]); 
+    try{
+      const response = await axiosHr().post("/addCandidate", formData, {
+         headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("Candidate added successfully:", response)
+      toast.success(response.data.message)
+
+      const formatted = formatCandidates(response.data.candidates);
+
+    dispatch(setCandidates(formatted));
+
+      onClose()
+    }catch (error) {
+      console.error("Error adding candidate:", error)
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message || "Failed to add candidate")
+      } else {
+        toast.error("An unexpected error occurred")
+      }
+    }
   }
 
   const handleFileChange = (event) => {

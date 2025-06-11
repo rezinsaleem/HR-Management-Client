@@ -6,8 +6,26 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import Header from "../../components/header/Header"
 import Table from "../../components/table/Table"
 import LeaveCalendar from "../../components/calendar/LeaveCalendar"
+import { useDispatch, useSelector } from "react-redux"
+import { setCandidates } from "../../service/redux/slices/candidateSlice"
+import { axiosHr } from "../../service/axios/axiosHr"
+import { formatCandidates } from "../../utils/formatCandidates"
+import { formatEmployeesFromCandidates } from "../../utils/formatEmployeesFromCandidates"
+import { formatEmployeeAttendance } from "../../utils/formatEmployeeAttendance"
+import {  formatLeaveData } from "../../utils/formatLeave"
+import { setLeaveData } from "../../service/redux/slices/leaveSlice"
+import LogoutForm from "../../components/forms/LogoutForm"
 
 export default function DashboardLayout() {
+
+  const dispatch = useDispatch()
+  const candidates = useSelector((state) => state.candidate.candidates)
+  const leaveData=useSelector((state)=> state.leave.leaveData)
+  console.log(candidates, "candidates from redux store");
+  const employees = formatEmployeesFromCandidates(candidates);
+  const attendees = formatEmployeeAttendance(candidates);
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+
   const [activeSidebarLink, setActiveSidebarLink] = useState(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search)
@@ -15,6 +33,20 @@ export default function DashboardLayout() {
     }
     return "Candidates"
   })
+
+  useEffect(() => {
+  const fetchCandidates = async () => {
+    try {
+      const response = await axiosHr().get("/candidates") 
+      const formatted = formatCandidates(response.data)
+      dispatch(setCandidates(formatted))
+    } catch (error) {
+      console.error("Error fetching candidates:", error)
+    }
+  }
+
+  fetchCandidates()
+}, [dispatch])
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,6 +75,18 @@ export default function DashboardLayout() {
       }
     }
   }, [activeSidebarLink])
+  useEffect(()=>{
+
+    const fetchData = async()=>{
+      const {data} =await axiosHr().get('/leave')
+      const formattedDatasLeave= formatLeaveData(data)
+      dispatch(setLeaveData(formattedDatasLeave))
+    }
+
+    fetchData()
+
+
+  },[])
 
   const tableData = {
     Candidates: {
@@ -56,48 +100,7 @@ export default function DashboardLayout() {
         { key: "experience", label: "Experience" },
         { key: "action", label: "Action" },
       ],
-      data: [
-        {
-          srNo: "01",
-          candidateName: "Jacob William",
-          emailAddress: "jacob.william@example.com",
-          phoneNumber: "(252) 555-0111",
-          position: "Senior Developer",
-          status: "New",
-          experience: "1+",
-          action: ["Download Resume", "Delete Candidate"],
-        },
-        {
-          srNo: "02",
-          candidateName: "Guy Hawkins",
-          emailAddress: "kenzi.lawson@example.com",
-          phoneNumber: "(907) 555-0101",
-          position: "Human Resource I...",
-          status: "New",
-          experience: "1+",
-          action: ["Download Resume", "Delete Candidate"],
-        },
-        {
-          srNo: "03",
-          candidateName: "Arlene McCoy",
-          emailAddress: "arlene.mccoy@example.com",
-          phoneNumber: "(302) 555-0107",
-          position: "Full Time Designer",
-          status: "Selected",
-          experience: "1+",
-          action: ["Download Resume", "Delete Candidate"],
-        },
-        {
-          srNo: "04",
-          candidateName: "Leslie Alexander",
-          emailAddress: "willie.jennings@example.com",
-          phoneNumber: "(207) 555-0119",
-          position: "Full Time Developer",
-          status: "Rejected",
-          experience: "0",
-          action: ["Download Resume", "Delete Candidate"],
-        },
-      ],
+      data: candidates,
     },
     Employees: {
       columns: [
@@ -109,88 +112,18 @@ export default function DashboardLayout() {
         { key: "dateOfJoining", label: "Date of Joining" },
         { key: "action", label: "Action" },
       ],
-      data: [
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Robert Smith",
-          emailAddress: "robert.smith@example.com",
-          phoneNumber: "(301) 555-6789",
-          position: "Frontend Developer",
-          dateOfJoining: "2022-04-15",
-          action: ["Edit", "Delete"],
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Sarah Johnson",
-          emailAddress: "sarah.johnson@example.com",
-          phoneNumber: "(406) 555-3412",
-          position: "UI/UX Designer",
-          dateOfJoining: "2021-11-02",
-          action: ["Edit", "Delete"],
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Michael Chen",
-          emailAddress: "michael.chen@example.com",
-          phoneNumber: "(512) 555-9876",
-          position: "Backend Developer Intern",
-          dateOfJoining: "2023-01-10",
-          action: ["Edit", "Delete"],
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Alicia Rodriguez",
-          emailAddress: "alicia.rodriguez@example.com",
-          phoneNumber: "(702) 555-4321",
-          position: "HR Manager",
-          dateOfJoining: "2021-08-22",
-          action: ["Edit", "Delete"],
-        },
-      ],
+     data: employees,
     },
     Attendance: {
       columns: [
         { key: "profileImage", label: "Profile" },
         { key: "employeeName", label: "Employee Name" },
         { key: "position", label: "Position" },
-        { key: "department", label: "Department" },
+        { key: "emailAddress", label: "Email Address" },
         { key: "task", label: "Task" },
-        { key: "status", label: "Status" },
+        { key: "attendance", label: "Status" },
       ],
-      data: [
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Robert Smith",
-          position: "Frontend Developer",
-          department: "Engineering",
-          task: "Homepage redesign",
-          status: "Present",
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Sarah Johnson",
-          position: "UI/UX Designer",
-          department: "Design",
-          task: "User research",
-          status: "Absent",
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Michael Chen",
-          position: "Backend Developer",
-          department: "Engineering",
-          task: "API development",
-          status: "Present",
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Alicia Rodriguez",
-          position: "HR Manager",
-          department: "Human Resources",
-          task: "Recruitment process",
-          status: "Present",
-        },
-      ],
+      data: attendees,
     },
     Leaves: {
       columns: [
@@ -201,28 +134,7 @@ export default function DashboardLayout() {
         { key: "status", label: "Status" },
         { key: "doc", label: "Doc" },
       ],
-      data: [
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Michael Chen",
-          date: "2025-01-10",
-          reason: "Medical leave",
-          status: "Approved",
-          doc :''
-        },
-        {
-          profileImage: "/assets/userdefault.jpg?height=40&width=40",
-          employeeName: "Alicia Rodriguez",
-          date: "2025-01-20",
-          reason: "Sick leave",
-          status: "Pending",
-          doc :''
-        },
-      ],
-    },
-    Logout: {
-      columns: [{ key: "message", label: "Message" }],
-      data: [{ message: "Please log out to view this content." }],
+      data: leaveData,
     },
   }
 
@@ -261,6 +173,7 @@ export default function DashboardLayout() {
       },
       table: {
         status: ["Approved", "Rejected"],
+        action:['doc']
       },
     },
     Logout: {
@@ -275,11 +188,22 @@ export default function DashboardLayout() {
   }
 
   const currentTable = tableData[activeSidebarLink] || { columns: [], data: [] }
-
   const handleLinkClick = (linkName) => {
     console.log("Setting active link to:", linkName)
+
+    // Handle logout click
+    if (linkName === "Logout") {
+      setShowLogoutModal(true)
+      return // Don't change the active sidebar link for logout
+    }
+
     setActiveSidebarLink(linkName)
   }
+
+  const handleCloseLogoutModal = () => {
+    setShowLogoutModal(false)
+  }
+
 
   return (
     <div className="dashboard-layout-container">
@@ -302,6 +226,7 @@ export default function DashboardLayout() {
           )}
         </div>
       </main>
+      {showLogoutModal && <LogoutForm onClose={handleCloseLogoutModal} />}
     </div>
   )
 }

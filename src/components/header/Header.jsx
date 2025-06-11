@@ -3,6 +3,7 @@ import { ChevronDown, Search, Mail, Bell } from "lucide-react"
 import CustomDropdown from "../dropdown/CustomDropdown"
 import AddCandidateForm from "../forms/AddCandidateForm"
 import "./header.css"
+import AddLeaveForm from "../forms/AddLeaveForm"
 
 export default function Header({ currentTab, statusOptions = [], positionOptions = [] }) {
   const [selectedStatus, setSelectedStatus] = useState("Status")
@@ -145,25 +146,7 @@ export default function Header({ currentTab, statusOptions = [], positionOptions
 
       {isAddCandidateModalOpen && <AddCandidateForm onClose={closeAddCandidateModal} />}
 
-      {isAddLeaveModalOpen && (
-        <div>
-          <div className="add-candidate-modal-overlay">
-            <div className="add-candidate-modal-content">
-              <div className="add-candidate-modal-header">
-                <div></div>
-                <h2 className="add-candidate-modal-title">Add New Leave</h2>
-                <button className="add-candidate-modal-close-button" onClick={closeAddLeaveModal}>
-                  ×
-                </button>
-              </div>
-              <div style={{ padding: "30px", textAlign: "center" }}>
-                <p>Add Leave Form will go here</p>
-                <button onClick={closeAddLeaveModal}>Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {isAddLeaveModalOpen && <AddLeaveForm onClose={closeAddLeaveModal} />}
     </header>
   )
 }

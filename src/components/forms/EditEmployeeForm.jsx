@@ -1,23 +1,34 @@
-import { useRef, useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { X, ChevronDown } from "lucide-react"
-import "./candidateform.css" 
+import { useRef, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { X, ChevronDown } from "lucide-react";
+import "./candidateform.css";
+import { axiosHr } from "../../service/axios/axiosHr";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { formatCandidates } from "../../utils/formatCandidates";
+import { setCandidates } from "../../service/redux/slices/candidateSlice";
 
 const editEmployeeSchema = yup.object().shape({
   fullName: yup.string().required("Full name is required"),
-  emailAddress: yup.string().email("Invalid email address").required("Email address is required"),
+  emailAddress: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email address is required"),
   phoneNumber: yup.string().required("Phone number is required"),
   position: yup.string().required("Position is required"),
   experience: yup.string().required("Experience is required"),
-  dateofjoining: yup.string().required("Date of Joining is required"),
-})
+  dateOfJoining: yup.string().required("Date of Joining is required"),
+});
 
-export default function EditEmployeeForm({ onClose }) {
-  const modalContentRef = useRef(null)
- const [isPositionDropdownOpen, setIsPositionDropdownOpen] = useState(false); 
- const [displayPositionValue, setDisplayPositionValue] = useState("Select Position"); 
+export default function EditEmployeeForm({ onClose, defaultValues }) {
+  const modalContentRef = useRef(null);
+  const positionDropdownRef = useRef(null);
+  const dispatch = useDispatch()
+
+  const [isPositionDropdownOpen, setIsPositionDropdownOpen] = useState(false);
+  const [displayPositionValue, setDisplayPositionValue] = useState("Select Position");
 
   const {
     register,
@@ -26,10 +37,17 @@ export default function EditEmployeeForm({ onClose }) {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(editEmployeeSchema),
-   
-  })
+    defaultValues,
+  });
 
-  const positionDropdownRef = useRef(null); 
+  useEffect(() => {
+    if (defaultValues) {
+      for (const key in defaultValues) {
+        setValue(key, defaultValues[key]);
+        if (key === "position") setDisplayPositionValue(defaultValues[key]);
+      }
+    }
+  }, [defaultValues, setValue]);
 
   const handlePositionSelect = (option) => {
     setDisplayPositionValue(option);
@@ -37,30 +55,38 @@ export default function EditEmployeeForm({ onClose }) {
     setIsPositionDropdownOpen(false);
   };
 
-
-
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    const clickedOutsideModal = modalContentRef.current && !modalContentRef.current.contains(event.target);
-    const clickedOutsideDropdown = positionDropdownRef.current && !positionDropdownRef.current.contains(event.target);
+    const handleClickOutside = (event) => {
+      const clickedOutsideModal =
+        modalContentRef.current && !modalContentRef.current.contains(event.target);
+      const clickedOutsideDropdown =
+        positionDropdownRef.current && !positionDropdownRef.current.contains(event.target);
 
-    if (clickedOutsideModal && clickedOutsideDropdown) {
+      if (clickedOutsideModal && clickedOutsideDropdown) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
+  const onSubmit = async (data) => {
+    try {
+      await axiosHr().put("/updateEmployee", data);
+      const res = await axiosHr().get("/candidates");
+      console.log("Employee updated successfully:", data);
+      toast.success("Employee updated successfully!");
+      const formatted = formatCandidates(res.data);
+      dispatch(setCandidates(formatted));
       onClose();
+    } catch (error) {
+      toast.error("Failed to update employee");
+      console.error("Update error:", error);
     }
   };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [onClose]);
-
-
-  const onSubmit = (data) => {
-    console.log("Add Candidate Form Data:", data)
-    alert("Candidate added successfully! Check console for data.")
-    onClose()
-  }
 
   return (
     <div className="add-candidate-modal-overlay">
@@ -74,13 +100,14 @@ export default function EditEmployeeForm({ onClose }) {
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="add-candidate-form">
           <div className="add-candidate-form-grid">
+            {/* Full Name */}
             <div className={`add-candidate-form-group ${errors.fullName ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="fullName"
                 type="text"
                 className="add-candidate-input"
                 {...register("fullName")}
-                placeholder=" " 
+                placeholder=" "
               />
               <label htmlFor="fullName" className="add-candidate-label">
                 Full Name<span className="add-candidate-label-star">*</span>
@@ -88,6 +115,7 @@ export default function EditEmployeeForm({ onClose }) {
               {errors.fullName && <p className="add-candidate-error-message">{errors.fullName.message}</p>}
             </div>
 
+            {/* Email */}
             <div className={`add-candidate-form-group ${errors.emailAddress ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="emailAddress"
@@ -95,6 +123,7 @@ export default function EditEmployeeForm({ onClose }) {
                 className="add-candidate-input"
                 {...register("emailAddress")}
                 placeholder=" "
+                readOnly
               />
               <label htmlFor="emailAddress" className="add-candidate-label">
                 Email Address<span className="add-candidate-label-star">*</span>
@@ -102,13 +131,14 @@ export default function EditEmployeeForm({ onClose }) {
               {errors.emailAddress && <p className="add-candidate-error-message">{errors.emailAddress.message}</p>}
             </div>
 
+            {/* Phone Number */}
             <div className={`add-candidate-form-group ${errors.phoneNumber ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="phoneNumber"
                 type="text"
                 className="add-candidate-input"
                 {...register("phoneNumber")}
-                placeholder=" " 
+                placeholder=" "
               />
               <label htmlFor="phoneNumber" className="add-candidate-label">
                 Phone Number<span className="add-candidate-label-star">*</span>
@@ -116,54 +146,52 @@ export default function EditEmployeeForm({ onClose }) {
               {errors.phoneNumber && <p className="add-candidate-error-message">{errors.phoneNumber.message}</p>}
             </div>
 
-             <div className={`add-candidate-form-group ${errors.position ? "add-candidate-input-error-group" : ""}`}>
+            {/* Position Dropdown */}
+            <div className={`add-candidate-form-group ${errors.position ? "add-candidate-input-error-group" : ""}`}>
               <div
-                id="position"
-                className="add-candidate-input add-candidate-custom-dropdown-input" 
+                className="add-candidate-input add-candidate-custom-dropdown-input"
                 tabIndex="0"
                 onClick={() => setIsPositionDropdownOpen(!isPositionDropdownOpen)}
-                onBlur={() => {
-                  register("position").onBlur();
-                }}
-                ref={(e) => {
-                  register("position").ref(e); 
-                  positionDropdownRef.current = e; 
-               }}
-             >
-               <span className={displayPositionValue === "Select Position" ? "add-candidate-placeholder-text" : ""}>
+                ref={positionDropdownRef}
+              >
+                <span className={displayPositionValue === "Select Position" ? "add-candidate-placeholder-text" : ""}>
                   {displayPositionValue}
                 </span>
                 <ChevronDown size={16} className="add-candidate-dropdown-arrow" />
-             </div>
-               <label htmlFor="position" className="add-candidate-label">
-                 Position<span className="add-candidate-label-star">*</span>
-               </label>
-             {isPositionDropdownOpen && (
-               <ul className="add-candidate-custom-dropdown-content">
+              </div>
+              <label htmlFor="position" className="add-candidate-label">
+                Position<span className="add-candidate-label-star">*</span>
+              </label>
+              {isPositionDropdownOpen && (
+                <ul className="add-candidate-custom-dropdown-content">
                   {[
                     "Senior Developer",
-                    "Human Resource I...",
+                    "Human Resource Intern",
                     "Full Time Designer",
                     "Full Time Developer",
-                   "Other",
+                    "Other",
                   ].map((option, index) => (
-                    <li key={index} className="add-candidate-custom-dropdown-item" onClick={() => handlePositionSelect(option)}>
+                    <li
+                      key={index}
+                      className="add-candidate-custom-dropdown-item"
+                      onClick={() => handlePositionSelect(option)}
+                    >
                       {option}
                     </li>
-                 ))}
-               </ul>
+                  ))}
+                </ul>
               )}
               {errors.position && <p className="add-candidate-error-message">{errors.position.message}</p>}
             </div>
 
-
+            {/* Experience */}
             <div className={`add-candidate-form-group ${errors.experience ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="experience"
                 type="text"
                 className="add-candidate-input"
                 {...register("experience")}
-                placeholder=" " 
+                placeholder=" "
               />
               <label htmlFor="experience" className="add-candidate-label">
                 Experience<span className="add-candidate-label-star">*</span>
@@ -171,24 +199,19 @@ export default function EditEmployeeForm({ onClose }) {
               {errors.experience && <p className="add-candidate-error-message">{errors.experience.message}</p>}
             </div>
 
-           <div
-              className={`add-candidate-form-group ${errors.dateofjoining ? "add-candidate-input-error-group" : ""}`}
-            >
+            <div className={`add-candidate-form-group ${errors.dateOfJoining ? "add-candidate-input-error-group" : ""}`}>
               <input
                 id="dateOfJoining"
                 type="date"
                 className="add-candidate-input"
                 {...register("dateOfJoining")}
-                placeholder=" "
               />
               <label htmlFor="dateOfJoining" className="add-candidate-label">
                 Date of Joining<span className="add-candidate-label-star">*</span>
               </label>
-              {errors.dateofjoining && <p className="add-candidate-error-message">{errors.dateofjoining.message}</p>}
-              {/* <Calendar size={20} className="add-candidate-calendar-icon" /> Calendar icon */}
+              {errors.dateOfJoining && <p className="add-candidate-error-message">{errors.dateOfJoining.message}</p>}
             </div>
           </div>
-
 
           <button type="submit" className="add-candidate-save-button">
             Save
@@ -196,7 +219,5 @@ export default function EditEmployeeForm({ onClose }) {
         </form>
       </div>
     </div>
-  )
+  );
 }
-
-

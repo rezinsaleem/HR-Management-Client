@@ -28,7 +28,7 @@
   width: 90%;
   max-width: 900px; 
   height: auto; 
-  min-height: 350px;
+  min-height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -420,3 +420,121 @@
 
 
 /*leave*/
+/* Search Group Styles */
+.add-candidate-search-group {
+  position: relative;
+}
+
+/* Search Dropdown Styles */
+.add-candidate-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.add-candidate-search-option {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.add-candidate-search-option:last-child {
+  border-bottom: none;
+}
+
+.add-candidate-search-option:hover {
+  background-color: #f8f9fa;
+}
+
+.add-candidate-search-option-name {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.add-candidate-search-option-designation {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+/* Ensure dropdown appears above other elements */
+.add-candidate-search-group {
+  z-index: 10;
+}
+
+/* Style for when dropdown is open */
+.add-candidate-search-group.dropdown-open .add-candidate-input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Scrollbar styling for dropdown */
+.add-candidate-search-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.add-candidate-search-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.add-candidate-search-dropdown::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.add-candidate-search-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.new-logout-button{
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  margin-top: 40px;
+}
+
+
+.add-candidate-save-button-red{
+  background-color: #585757; 
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: 10px;
+  align-self: center; 
+  width: fit-content; 
+  min-width: 120px;
+}
+
+.add-candidate-save-button-grey{
+  background-color: #ef1111; 
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: 10px;
+  align-self: center; 
+  width: fit-content; 
+  min-width: 120px;
+}
