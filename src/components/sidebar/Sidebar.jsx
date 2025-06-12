@@ -1,8 +1,10 @@
-
-import { Square, Search, Users, BarChart, Sparkles, LogOut } from "lucide-react"
+import { Square, Search, Users, BarChart, Sparkles, LogOut, Menu, X } from 'lucide-react'
+import { useState } from "react"
 import "./sidebar.css" 
 
 export default function Sidebar({ onLinkClick, activeLink }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
   const navigationItems = [
     {
       category: "Recruitment",
@@ -22,42 +24,67 @@ export default function Sidebar({ onLinkClick, activeLink }) {
     },
   ]
 
+  const handleMobileLinkClick = (itemName) => {
+    onLinkClick(itemName)
+    setIsMobileMenuOpen(false) 
+  }
+
   return (
-    <div className="sidebar-container">
-      <div className="sidebar-header">
-        <Square className="sidebar-logo-icon" size={32} />
-        <span className="sidebar-logo-text">LOGO</span>
-      </div>
+    <>
+      {/* Mobile Hamburger Button */}
+      <button 
+        className="sidebar-mobile-toggle"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      <div className="sidebar-search-wrapper">
-        <Search className="sidebar-search-icon" size={20} />
-        <input type="text" placeholder="Search" className="sidebar-search-input" />
-      </div>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="sidebar-mobile-overlay"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
-      <nav className="sidebar-navigation">
-        {navigationItems.map((categoryGroup, index) => (
-          <div key={index} className="sidebar-category-group">
-            <h3 className="sidebar-category-label">{categoryGroup.category}</h3>
-            <ul className="sidebar-menu">
-              {categoryGroup.links.map((item, itemIndex) => (
-                <li key={itemIndex} className="sidebar-menu-item">
-                  <a
-                    href="#"
-                    className={`sidebar-menu-link ${activeLink === item.name ? "sidebar-menu-link-active" : ""}`}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onLinkClick(item.name)
-                    }}
-                  >
-                    <item.icon className="sidebar-menu-icon" size={20} />
-                    <span>{item.name}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
-    </div>
+      {/* Sidebar */}
+      <div className={`sidebar-container ${isMobileMenuOpen ? 'sidebar-mobile-open' : ''}`}>
+        <div className="sidebar-header">
+          <Square className="sidebar-logo-icon" size={32} />
+          <span className="sidebar-logo-text">LOGO</span>
+        </div>
+
+        <div className="sidebar-search-wrapper">
+          <Search className="sidebar-search-icon" size={20} />
+          <input type="text" placeholder="Search" className="sidebar-search-input" />
+        </div>
+
+        <nav className="sidebar-navigation">
+          {navigationItems.map((categoryGroup, index) => (
+            <div key={index} className="sidebar-category-group">
+              <h3 className="sidebar-category-label">{categoryGroup.category}</h3>
+              <ul className="sidebar-menu">
+                {categoryGroup.links.map((item, itemIndex) => (
+                  <li key={itemIndex} className="sidebar-menu-item">
+                    <a
+                      href="#"
+                      className={`sidebar-menu-link ${activeLink === item.name ? "sidebar-menu-link-active" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleMobileLinkClick(item.name)
+                      }}
+                    >
+                      <item.icon className="sidebar-menu-icon" size={20} />
+                      <span>{item.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </div>
+    </>
   )
 }

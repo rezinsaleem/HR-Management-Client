@@ -1,6 +1,3 @@
-
-
-
 .signin-page-container {
   display: flex;
   flex-direction: column;
@@ -23,7 +20,6 @@
   font-size: 24px;
 }
 
-
 .signin-logo-icon {
   color: #4d007d; 
 }
@@ -35,7 +31,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden; 
   width: 100%;
-  min-width: 1200px; 
+  min-width: 1200px; /* This is causing the mobile overflow issue */
 }
 
 .signin-left-panel {
@@ -105,6 +101,7 @@
   flex-direction: column;
   justify-content: start;
 }
+
 .signin-form-container{
   max-width: 400px;
   margin-left: 60px;
@@ -136,6 +133,7 @@
   margin-left: 1px;
   font-weight: 400;
 }
+
 .signin-label-star{
   color: #e74c3c;
 }
@@ -226,29 +224,75 @@
   text-decoration: underline;
 }
 
-
+/* FIXED MOBILE STYLES */
 @media (max-width: 768px) {
-  .signin-main-card {
-    flex-direction: column;
-    max-width: 450px; 
+  /* Fix for body overflow */
+  body {
+    overflow-x: hidden;
+    display: block; /* Override flex display from body */
+    min-height: 100vh;
+  }
+  
+  .signin-page-container {
+    padding: 20px;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
+  .signin-main-card {
+    min-width: unset !important; /* Override the min-width with !important */
+    max-width: 400px;
+    width: 100%;
+    flex-direction: column;
+    border-radius: 15px;
+    margin: 0 auto; /* Center the card */
+  }
+
+  /* Hide left panel on mobile */
   .signin-left-panel {
-    padding: 30px;
-    min-height: auto; 
+    display: none !important; /* Force hide with !important */
   }
 
   .signin-right-panel {
-    padding: 30px;
+    padding: 30px 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .signin-form-container {
+    max-width: 100%;
+    margin-left: 0;
+    width: 100%;
   }
 
   .signin-welcome-heading {
     font-size: 24px;
     text-align: center;
+    margin-bottom: 30px;
   }
 
-  .signin-logo-header {
-    margin-bottom: 20px;
+  .signin-input {
+    width: calc(100% - 28px);
+    padding: 16px 14px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .signin-login-button {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 16px;
+    margin-top: 15px;
+  }
+
+  .signin-register-link-container {
+    justify-content: center;
+    text-align: center;
+    margin-top: 25px;
+    margin-left: 0;
   }
 }
 
@@ -259,14 +303,32 @@
 
   .signin-logo-header {
     font-size: 20px;
+    margin-bottom: 30px;
   }
 
-  .signin-left-heading {
-    font-size: 20px;
+  .signin-main-card {
+    max-width: 350px;
+    border-radius: 12px;
+  }
+
+  .signin-right-panel {
+    padding: 25px 15px;
+
+  }
+
+  .signin-welcome-heading {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .signin-input {
+    width: calc(100%);
+    padding: 14px 12px;
   }
 
   .signin-login-button {
-    font-size: 16px;
-    padding: 12px 15px;
+    padding: 14px 20px;
+    font-size: 15px;
+    background-color: #4d007d;
   }
 }

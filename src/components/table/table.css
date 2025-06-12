@@ -50,6 +50,7 @@
 .table-body-row {
   border-bottom: 1px solid #eee;
 }
+
 .table-body-row:last-child {
   border-bottom: none;
 }
@@ -78,12 +79,15 @@
 .col-name {
   width: 300px;
 }
+
 .col-email {
   width: 400px;
 }
+
 .col-phone {
   width: 180px;
 }
+
 .col-status {
   width: 120px;
 }
@@ -107,6 +111,7 @@
   border-color: #b5b6b5;
   color: #333;
 }
+
 .table-status-selected {
   border-color: #4d007d;
   color: #4d007d;
@@ -130,6 +135,157 @@
   object-fit: cover;
 }
 
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+  /* Make leaves container full width on mobile */
+  .leaves-container {
+    width: 100% !important;
+    margin: 0;
+    border-radius: 12px;
+    margin-bottom: 50px;
+    min-height: auto;
+    height: auto;
+  }
+
+  .table-container {
+    width: 100%;
+    margin: 0;
+    border-radius: 12px;
+    margin-bottom: 50px;
+    overflow-x: auto;
+  }
+
+  /* Adjust table layout for mobile */
+  .table-main,
+  .leaves-main {
+    min-width: 700px; /* Ensure horizontal scroll on very small screens */
+    font-size: 13px;
+  }
+
+  .table-header-cell,
+  .table-body-cell {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+
+  /* Adjust column widths for mobile */
+  .col-srNo,
+  .col-experience,
+  .col-action,
+  .col-doc,
+  .col-profileImage {
+    width: 35px;
+    min-width: 35px;
+    max-width: 50px;
+  }
+
+  .col-name {
+    width: 200px;
+    min-width: 150px;
+  }
+
+  .col-email {
+    width: 250px;
+    min-width: 200px;
+  }
+
+  .col-phone {
+    width: 120px;
+    min-width: 100px;
+  }
+
+  .col-status {
+    width: 100px;
+    min-width: 90px;
+  }
+
+  /* Adjust status button for mobile */
+  .table-status-button {
+    padding: 5px 8px;
+    min-width: 80px;
+    font-size: 11px;
+    border-radius: 12px;
+  }
+
+  /* Adjust profile image for mobile */
+  .table-profile-image {
+    width: 35px;
+    height: 35px;
+    margin-left: 2px;
+  }
+
+  /* Improve dropdown positioning on mobile */
+  .table-action-dropdown-content {
+    right: -10px;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leaves-container,
+  .table-container {
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-main,
+  .leaves-main {
+    min-width: 600px;
+  }
+
+  .table-header-cell,
+  .table-body-cell {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+
+  /* Further adjust column widths for small screens */
+  .col-srNo,
+  .col-experience,
+  .col-action,
+  .col-doc,
+  .col-profileImage {
+    width: 30px;
+    min-width: 30px;
+    max-width: 40px;
+  }
+
+  .col-name {
+    width: 150px;
+    min-width: 120px;
+  }
+
+  .col-email {
+    width: 200px;
+    min-width: 150px;
+  }
+
+  .col-phone {
+    width: 100px;
+    min-width: 80px;
+  }
+
+  .col-status {
+    width: 80px;
+    min-width: 70px;
+  }
+
+  .table-status-button {
+    padding: 4px 6px;
+    min-width: 70px;
+    font-size: 10px;
+    border-radius: 10px;
+  }
+
+  .table-profile-image {
+    width: 30px;
+    height: 30px;
+    margin-left: 1px;
+  }
+}
+
+/* Legacy mobile styles for backward compatibility */
 @media (max-width: 600px) {
   .table-header-cell,
   .table-body-cell {

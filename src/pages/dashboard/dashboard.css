@@ -1,4 +1,3 @@
-
 .dashboard-layout-container {
   display: flex;
   min-height: 100vh;
@@ -17,8 +16,6 @@
   gap: 20px;
 }
 
-
-
 @media (max-width: 1024px) {
   .dashboard-main-content {
     margin-left: 25vw; 
@@ -31,6 +28,7 @@
   }
 
   .dashboard-content-wrapper {
-    padding: 20px; 
+    padding: 20px;
+    flex-direction: column; /* Added: Make vertical layout on mobile when calendar is present */
   }
 }

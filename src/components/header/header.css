@@ -1,4 +1,3 @@
-
 .header-container {
   width: 100%; 
   display: flex;
@@ -49,8 +48,9 @@
   cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
+
 .header-filter-button-chevron{
-margin-top: 2.5px;
+  margin-top: 2.5px;
 }
 
 .header-filter-button:hover {
@@ -209,61 +209,189 @@ margin-top: 2.5px;
   }
 }
 
+/* MOBILE LAYOUT WITH REQUESTED CHANGES */
 @media (max-width: 768px) {
   .header-container {
-    flex-direction: column; 
-    align-items: flex-start;
-    padding: 20px;
-    gap: 20px;
-    box-shadow: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+    gap: 15px;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  /* Profile button in top right corner */
+  .header-profile-wrapper {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+  }
+
+  /* Hide notification icons on mobile */
+  .header-icon-wrapper {
+    display: none;
+  }
+
+  /* Keep only profile visible */
+  .header-icons {
+    display: none;
   }
 
   .header-left-section {
     width: 100%;
-    align-items: center; 
+    align-items: center; /* Center the heading */
+    margin-top: 20px; /* Add space for profile button */
+  }
+
+  .header-title {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-align: center; /* Center the heading text */
+  }
+
+  .header-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+    width: 100%;
+    justify-content: center; /* Center the filters */
+  }
+
+  .header-filter-button {
+    width: auto;
+    min-width: 110px;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 
   .header-right-section {
     width: 100%;
-    flex-direction: column; 
-    align-items: center;
-    gap: 15px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 
   .header-action-row {
-    flex-direction: column;
     width: 100%;
+    flex-direction: row; /* Keep search and button in same row */
+    gap: 12px;
     align-items: center;
-    gap: 10px;
+  }
+
+  .header-search-wrapper {
+    flex: 1; /* Take equal space */
   }
 
   .header-search-input {
-    width: calc(100% - 40px); 
-    max-width: 300px; 
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .header-search-icon {
+    left: 18px;
   }
 
   .header-add-button {
-    width: 100%;
-    max-width: 200px; 
+    flex: 1; /* Take equal space as search */
+    padding: 12px 20px;
+    font-size: 15px;
+    white-space: nowrap; /* Prevent text wrapping */
   }
 
-  .header-icons {
+  /* Make dropdown content responsive */
+  .header-dropdown-content {
+    left: 0;
+    right: 0;
+    min-width: auto;
     width: 100%;
-    justify-content: center;
-    gap: 25px;
+    max-width: 200px;
   }
 }
 
 @media (max-width: 480px) {
+  .header-container {
+    padding: 12px;
+  }
+
+  .header-profile-wrapper {
+    top: 12px;
+    right: 12px;
+  }
+
   .header-title {
     font-size: 20px;
   }
 
+  .header-filters {
+    gap: 6px;
+  }
+
   .header-filter-button {
-    padding: 6px 12px;
-    font-size: 13px;
+    min-width: 100px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .header-action-row {
+    gap: 8px;
+  }
+
+  .header-profile-picture {
+    width: 28px;
+    height: 28px;
+  }
+
+  .header-search-input {
+    padding: 10px 10px 10px 40px;
+    font-size: 14px;
+  }
+
+  .header-search-icon {
+    left: 15px;
+  }
+
+  .header-add-button {
+    padding: 10px 16px;
+    font-size: 14px;
   }
 }
 
+/* Extra small screens */
+@media (max-width: 360px) {
+  .header-container {
+    padding: 10px;
+  }
 
+  .header-profile-wrapper {
+    top: 10px;
+    right: 10px;
+  }
 
+  .header-title {
+    font-size: 18px;
+  }
+
+  .header-filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .header-filter-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-action-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .header-search-wrapper,
+  .header-add-button {
+    width: 100%;
+  }
+}
